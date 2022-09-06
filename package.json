@@ -13,7 +13,7 @@
   "description": "JDBC Wrapper for as400 Databases",
   "repository": {
     "type": "git",
-    "url": "git://github.com/uranakam/dh-400jdbc.git"
+    "url": "git@github.com:Chris4589/jt-400jdbc.git"
   },
   "engines": {
     "node": ">= 12.0"

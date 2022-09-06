@@ -1,26 +1,26 @@
-DH-400JDBC
+JT-400JDBC
 ===========
 
 JDBC Wrapper for the JT400 driver to connect to an AS400 using JDBC.
 
-
+CREDITS - CREDITOS (https://www.npmjs.com/package/dh-400jdbc)
 Usage
 =============
 
 1. Require the module:
 
     ```
-    const jdbc = require('dh-400jdbc');
+    const jdbc = require('jt-400jdbc');
     ``` 
 
 2. Initialize the connection:
     ```
     // build the config.
     let config = {
-      host: 'String',
-      libraries: <String>,
-      username: <String>,
-      password: <String>,
+      host: 'String', // Host
+      libraries: <String>, // ServiceName
+      username: <String>, //username
+      password: <String>, //password
       initialPoolCount: <Number>, // Optional, Defaults to 1.
       logger: <Logger Reference> // Optional, Defaults to console.
     };
@@ -31,7 +31,7 @@ Usage
     });
     ```
    
-3. Execute a SQL query:
+3. Execute a SQL query - Ejecutar una consulta de SQL:
     ```
     jdbc.executeSqlString('SELECT * FROM TABLENAME', (err, results) => {
       // Do Something.
@@ -39,6 +39,7 @@ Usage
     ````
    
 4. Execute a prepared statement query. Note: parameters is an array of values:
+Ejecutar una consulta preparada, parameters es un array []
     ```
     jdbc.executePreparedStatement(sql, parameters, (err, results) => {
       // Do Something.
@@ -68,6 +69,9 @@ Usage
         ```
         let inputParameter = jdbc.createSPInputParameter(value);
         let outputParameter = jdbc.createSPOutputParameter(sqlDataType, fieldName);
+        jdbc.executeStoredProcedure(sql, [inputParameter, outputParameter], (err, result) => {
+          // Do Something.
+        });
         ```
    
     - Execute the statement:

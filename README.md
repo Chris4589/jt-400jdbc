@@ -25,32 +25,32 @@ Usage
       logger: <Logger Reference> // Optional, Defaults to console.
     };
    
-    // initialize the module.
-    jdbc.initialize(config, (err) => {
-      // Do Something.
-    });
+    // initialize the module. - Inicializar conexión a AS400
+    jdbc.initialize(config)
+       .then(() => console.log('connected'))
+       .catch((err) => console.log(error));
     ```
    
 3. Execute a SQL query - Ejecutar una consulta de SQL:
     ```
-    jdbc.executeSqlString('SELECT * FROM TABLENAME', (err, results) => {
-      // Do Something.
-    });
+    jdbc.executeSqlString('SELECT * FROM TABLENAME')
+       .then((results) => console.log(results))
+       .catch((err) => console.log(error));
     ````
    
 4. Execute a prepared statement query. Note: parameters is an array of values:
 Ejecutar una consulta preparada, parameters es un array []
     ```
-    jdbc.executePreparedStatement(sql, parameters, (err, results) => {
-      // Do Something.
-    });
+    jdbc.executePreparedStatement(sql, parameters)
+       .then((results) => console.log(results))
+       .catch((err) => console.log(error));
     ```
    
 5. Execute an update prepared statement. Note: parameters is an array of values:
     ```
-    jdbc.executeUpdatePreparedStatement(sql, parameters, (err, results) => {
-      // Do Something.
-    });
+    jdbc.executeUpdatePreparedStatement(sql, parameters)
+       .then((result) => console.log(result)) // true if executed
+       .catch((err) => console.log(error));
     ```
    
 6. Executing a stored procedure. Note: the parameters array is an array of stored procedure parameter objects.
@@ -69,16 +69,17 @@ Ejecutar una consulta preparada, parameters es un array []
         ```
         let inputParameter = jdbc.createSPInputParameter(value);
         let outputParameter = jdbc.createSPOutputParameter(sqlDataType, fieldName);
-        jdbc.executeStoredProcedure(sql, [inputParameter, outputParameter], (err, result) => {
-          // Do Something.
-        });
+        
+        jdbc.executeStoredProcedure(sql, [inputParameter, outputParameter])
+            .then((results) => console.log(results))
+            .catch((err) => console.log(error));
         ```
    
     - Execute the statement:
         ```
-        jdbc.executeStoredProcedure(sql, parameters, (err, result) => {
-          // Do Something.
-        });
+        jdbc.executeStoredProcedure(sql, parameters)
+            .then((results) => console.log(results))
+            .catch((err) => console.log(error));
         ```
   
     - Note: The result object is a key value object where the keys are the output parameter field names.

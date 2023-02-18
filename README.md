@@ -1,4 +1,4 @@
-JT-400JDBC
+JT-400JDBC - Promise versión
 ===========
 
 JDBC Wrapper for the JT400 driver to connect to an AS400 using JDBC.
@@ -13,7 +13,7 @@ Usage
     const jdbc = require('jt-400jdbc');
     ``` 
 
-2. Initialize the connection:
+2. Initialize the connection: (Inicializar conexión)
     ```
     // build the config.
     let config = {

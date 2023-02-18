@@ -10,8 +10,6 @@ const Utils = require('./lib/utilities');
 // driver.
 let jdbc = null;
 
-// Prevention flag.
-let preventQueries = false;
 
 // Reference to the logger. Defaults to console.
 // NOTE: This assumes the logger has a .info, .warn, and .error function.
@@ -25,21 +23,6 @@ exports.parameterTypes = parameterTypes;
 // Getters and Setters.
 //======================================================================================
 
-/**
- * Sets the prevent queries flag.
- * @param prevent - The value.
- */
-exports.setPreventQueries = (prevent) => {
-  preventQueries = prevent;
-};
-
-/**
- * Gets the prevent queries flag.
- * @return {boolean}
- */
-exports.getPreventQueries = () => {
-  return preventQueries;
-};
 
 //======================================================================================
 // Configuration Functions.
@@ -48,9 +31,8 @@ exports.getPreventQueries = () => {
 /**
  * Initializes the jdbc connection.
  * @param options - The db options.
- * @param callback - The finished callback function.
  */
-exports.initialize = (options, callback) => {
+exports.initialize = (options) => {
   // if logger is set.
   if (_.has(options, 'logger')) {
     logger = options.logger;
@@ -60,15 +42,15 @@ exports.initialize = (options, callback) => {
   jdbc = new JDBC(options);
 
   // connect.
-  jdbc.connect(callback);
+  return jdbc.connect();
 };
 
 /**
  * Closes all connections in the pool.
  * @param callback - The finished callback function.
  */
-exports.closeAll = (callback) => {
-  jdbc.close(callback);
+exports.closeAll = () => {
+  return jdbc.close();
 };
 
 //======================================================================================
@@ -78,97 +60,39 @@ exports.closeAll = (callback) => {
 /**
  * Executes a sql string on the AS400.
  * @param sql
- * @param callback - The finished callback function when all rows have been processed.
  */
-exports.executeSqlString = (sql, callback) => {
-  // check the prevent queries flag.
-  if (preventQueries) {
-    return callback(new Error('Prevent queries flag is on. Maintenance is being performed.'));
-  }
+exports.executeSqlString = (sql) => jdbc.executeQuery(sql, []);
 
-  // execute the query.
-  jdbc.executeQuery(sql, [], callback);
-};
 
 /**
  * Executes a sql string on the AS400.
  * @param sql
  * @param parameters
- * @param callback - The finished callback function.
  */
-exports.executePreparedStatement = (sql, parameters, callback) => {
-  // check the prevent queries flag.
-  if (preventQueries) {
-    return callback(new Error('Prevent queries flag is on. Maintenance is being performed.'));
-  }
-
-  // execute the query.
-  jdbc.executeQuery(sql, parameters, callback);
-};
+exports.executePreparedStatement = (sql, parameters) => jdbc.executeQuery(sql, parameters);
 
 /**
  * Executes a sql string on the AS400.
  * @param sql
  * @param parameters
- * @param callback
  */
-exports.executeUpdatePreparedStatement = (sql, parameters, callback) => {
-  // check the prevent queries flag.
-  if (preventQueries) {
-    return callback(new Error('Prevent queries flag is on. Maintenance is being performed.'));
-  }
-
-  // execute the statement.
-  jdbc.executeStatement(sql, parameters, callback);
-};
+exports.executeUpdatePreparedStatement = (sql, parameters) =>  jdbc.executeStatement(sql, parameters);
 
 /**
  * Executes a prepared statement on the AS400 using an existing connection.
  * @param connection
  * @param sql
  * @param parameters
- * @param callback
  */
-exports.executeUpdateStatementInTransaction = (connection, sql, parameters, callback) => {
-  // check the prevent queries flag.
-  if (preventQueries) {
-    return callback(new Error('Prevent queries flag is on. Maintenance is being performed.'));
-  }
+exports.executeUpdateStatementInTransaction = (connection, sql, parameters) =>  jdbc.executeStatementInTransaction(connection, sql, parameters);
 
-  // execute the statement.
-  jdbc.executeStatementInTransaction(connection, sql, parameters, callback);
-};
 
 /**
  * Executes a stored procedure.
  * @param sql - The procedure call.
  * @param parameters - Array of parameter objects.
- * @param callback - The finished callback function.
  */
-exports.executeStoredProcedure = (sql, parameters, callback) => {
-  // check the prevent queries flag.
-  if (preventQueries) {
-    return callback(new Error('Prevent queries flag is on. Maintenance is being performed.'));
-  }
-
-  // execute the procedure.
-  jdbc.executeStoredProcedure(sql, parameters, callback);
-};
-
-/**
- * Runs a transaction on the database.
- * @param executeFunction - The function containing all the statements to be run in the transaction. executeFunction(connection, callback);
- * @param callback - The finished callback function.
- */
-exports.runTransaction = (executeFunction, callback) => {
-  // check the prevent queries flag.
-  if (preventQueries) {
-    return callback(new Error('Prevent queries flag is on. Maintenance is being performed.'));
-  }
-
-  // execute the transaction.
-  jdbc.runTransaction(executeFunction, callback);
-};
+exports.executeStoredProcedure = (sql, parameters) =>  jdbc.executeStoredProcedure(sql, parameters);
 
 //======================================================================================
 // Create Parameter Functions.
